@@ -10,53 +10,59 @@
 
 <% is_admin = current_user.administrator? %>
 
+<%
+  # Previously, scopes were determined by the URL query parameters, but this ensures accurate scopes for the
+  # registered application are shown
+  app_scopes = @pre_auth.client.application.scopes
+%>
+
 <h3>Authorization Required</h3>
 
 <p class="h4">
   <%= raw t('.prompt', client_name: "<strong class=\"text-info\">#{h @pre_auth.client.name}</strong>") %>
 </p>
 
-<% if @pre_auth.scopes.count > 0 %>
+<% if app_scopes.count > 0 %>
   <div id="oauth-permissions">
     <p><%= t('.able_to') %>:</p>
 
     <ul class="collection">
-      <% if @pre_auth.scopes.include? "user_info" %>
+      <% if app_scopes.include? "user_info" %>
         <li class="collection-item valign-wrapper">
           <i class="material-icons small">person_pin</i>
           Access your basic info (e.g. name, email, school, year)
         </li>
       <% end %>
 
-      <% if @pre_auth.scopes.include? "user_courses" %>
+      <% if app_scopes.include? "user_courses" %>
         <li class="collection-item valign-wrapper">
           <i class="material-icons small">class</i>
           Access your courses and assessments
         </li>
       <% end %>
 
-      <% if @pre_auth.scopes.include? "user_scores" %>
+      <% if app_scopes.include? "user_scores" %>
         <li class="collection-item valign-wrapper">
           <i class="material-icons small">assessment</i>
           Access your submissions, scores, and feedback
         </li>
       <% end %>
 
-      <% if @pre_auth.scopes.include? "user_submit" %>
+      <% if app_scopes.include? "user_submit" %>
         <li class="collection-item valign-wrapper">
           <i class="material-icons small">note_add</i>
           Submit assessments on your behalf
         </li>
       <% end %>
 
-      <% if @pre_auth.scopes.include? "instructor_all" %>
+      <% if app_scopes.include? "instructor_all" %>
         <li class="collection-item valign-wrapper">
           <i class="material-icons small">verified_user</i>
           Access admin options of courses where you are an instructor
         </li>
       <% end %>
 
-      <% if is_admin and @pre_auth.scopes.include? "admin_all" %>
+      <% if is_admin and app_scopes.include? "admin_all" %>
         <li class="collection-item valign-wrapper">
           <i class="material-icons small">developer_board</i>
           Access admin options of Autolab
